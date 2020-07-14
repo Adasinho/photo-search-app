@@ -1,7 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import styled from "styled-components"
-import {getRandomImage} from "../services/unsplash";
-import SearchBar from "../components/SearchBar";
+import {getRandomImage, searchImage, getSuggestion} from "../services/unsplash";
+import SearchBar from "../components/SearchBar/SearchBar";
+import {dropdownLink} from "../utils/constants";
 
 interface SearchPageProps {
 
@@ -9,6 +10,7 @@ interface SearchPageProps {
 
 const SearchPage: React.FC<SearchPageProps> = props => {
     const [background, setBackground] = useState("");
+    const [links, setLinks] = useState([dropdownLink]);
 
     const BackgroundImage = styled.div`
         align-items: center;
@@ -31,8 +33,15 @@ const SearchPage: React.FC<SearchPageProps> = props => {
 
     useEffect(() => {
         getRandomImage().then(photo => {
-            console.log(photo);
             setBackground(photo.urls.regular);
+        })
+
+        searchImage("island").then(result => {
+            console.log(result);
+        })
+
+        getSuggestion("island").then(res => {
+            console.log(res);
         })
     }, [])
 
@@ -46,7 +55,7 @@ const SearchPage: React.FC<SearchPageProps> = props => {
                             <div className={"h5 font-weight-normal"}>The Internet's source of <A href={"/"}>freely-usable-images.</A> </div>
                             <div className={"h5 font-weight-normal"}>Powered by creators everywhere.</div>
                         </div>
-                        <SearchBar/>
+                        <SearchBar links={links}/>
                     </header>
                 </div>
             </div>
